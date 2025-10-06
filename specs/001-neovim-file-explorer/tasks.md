@@ -76,7 +76,7 @@
 
 ### Contract Tests (Parallel - Different Files)
 
-- [ ] **T004** [P] Contract test for types.ts in `tests/contract/types.test.ts`
+- [x] **T004** [P] Contract test for types.ts in `tests/contract/types.test.ts`
   - Test FileNode interface compliance (type, name, path, hidden, fileType, size, mtime)
   - Test DirectoryNode interface compliance (type, name, path, hidden, expanded, children, childCount, mtime)
   - Test TreeNode discriminated union (type guards)
@@ -85,7 +85,7 @@
   - Test SearchQuery interface compliance
   - **Expected**: Tests FAIL (types not yet defined)
 
-- [ ] **T005** [P] Contract test for file-system-api.ts in `tests/contract/file-system-api.test.ts`
+- [x] **T005** [P] Contract test for file-system-api.ts in `tests/contract/file-system-api.test.ts`
   - Test createFile(path, content?) signature and return type
   - Test createDirectory(path, recursive?) signature and return type
   - Test deleteFile(path) signature and error conditions
@@ -99,7 +99,7 @@
   - Test isDirectory(path) signature
   - **Expected**: Tests FAIL (functions not implemented)
 
-- [ ] **T006** [P] Contract test for tree-api.ts in `tests/contract/tree-api.test.ts`
+- [x] **T006** [P] Contract test for tree-api.ts in `tests/contract/tree-api.test.ts`
   - Test buildTree(rootPath, showHidden) signature and return type
   - Test loadChildren(node, showHidden) signature
   - Test expandNode(node, showHidden) signature
@@ -111,7 +111,7 @@
   - Test refreshNode(node, showHidden) signature
   - **Expected**: Tests FAIL (functions not implemented)
 
-- [ ] **T007** [P] Contract test for search-api.ts in `tests/contract/search-api.test.ts`
+- [x] **T007** [P] Contract test for search-api.ts in `tests/contract/search-api.test.ts`
   - Test createSearchQuery(text) signature and return type
   - Test executeSearch(query, root) signature
   - Test matchesQuery(node, query) signature
@@ -119,7 +119,7 @@
   - Test clearSearchQuery(query) signature
   - **Expected**: Tests FAIL (functions not implemented)
 
-- [ ] **T008** [P] Contract test for ui-api.ts in `tests/contract/ui-api.test.ts`
+- [x] **T008** [P] Contract test for ui-api.ts in `tests/contract/ui-api.test.ts`
   - Test createTreeBuffer(denops) signature (mock denops)
   - Test renderTreeToBuffer(denops, bufnr, nodes, cursorLine) signature
   - Test formatNodeLine(node, depth) signature
@@ -131,21 +131,21 @@
   - Test input(denops, prompt, defaultValue?) signature
   - **Expected**: Tests FAIL (functions not implemented)
 
-- [ ] **T009** [P] Contract test for system-api.ts in `tests/contract/system-api.test.ts`
+- [x] **T009** [P] Contract test for system-api.ts in `tests/contract/system-api.test.ts`
   - Test openWithSystemApp(path) signature and error conditions
   - Test detectPlatform() signature and return values ("darwin" | "linux")
   - **Expected**: Tests FAIL (functions not implemented)
 
 ### Integration Tests (Parallel - Different Files)
 
-- [ ] **T010** [P] Integration test: Open tree and display structure in `tests/integration/open-tree.test.ts`
+- [x] **T010** [P] Integration test: Open tree and display structure in `tests/integration/open-tree.test.ts`
   - Mock file system with test directory structure
   - Test opening tree buffer (quickstart step 1)
   - Assert directories and files displayed with icons
   - Assert hidden files NOT visible initially
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T011** [P] Integration test: Expand/collapse directory in `tests/integration/expand-collapse.test.ts`
+- [x] **T011** [P] Integration test: Expand/collapse directory in `tests/integration/expand-collapse.test.ts`
   - Mock directory with children
   - Test expand operation (quickstart step 2)
   - Assert children become visible with proper indentation
@@ -153,26 +153,26 @@
   - Assert children hidden
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T012** [P] Integration test: Navigate tree with cursor in `tests/integration/navigate.test.ts`
+- [x] **T012** [P] Integration test: Navigate tree with cursor in `tests/integration/navigate.test.ts`
   - Mock tree with multiple nodes
   - Test cursor movement up/down (quickstart step 3)
   - Assert cursor position updates correctly
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T013** [P] Integration test: Open file in buffer in `tests/integration/open-file.test.ts`
+- [x] **T013** [P] Integration test: Open file in buffer in `tests/integration/open-file.test.ts`
   - Mock file in tree
   - Test opening file with <CR> (quickstart step 4)
   - Assert file opens in Neovim buffer (mock denops)
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T014** [P] Integration test: Toggle hidden files in `tests/integration/toggle-hidden.test.ts`
+- [x] **T014** [P] Integration test: Toggle hidden files in `tests/integration/toggle-hidden.test.ts`
   - Mock directory with hidden files (.git, .gitignore)
   - Test toggle hidden files (quickstart step 5)
   - Assert hidden files appear/disappear
   - Assert tree updates correctly
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T015** [P] Integration test: Search files interactively in `tests/integration/search.test.ts`
+- [x] **T015** [P] Integration test: Search files interactively in `tests/integration/search.test.ts`
   - Mock tree with multiple files
   - Test search activation and filtering (quickstart step 6)
   - Assert matching files highlighted/visible
@@ -180,7 +180,7 @@
   - Assert <100ms performance requirement (FR-030)
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T016** [P] Integration test: Create file in `tests/integration/create-file.test.ts`
+- [x] **T016** [P] Integration test: Create file in `tests/integration/create-file.test.ts`
   - Mock directory
   - Test file creation (quickstart step 7)
   - Assert file created in file system (mock)
@@ -188,14 +188,14 @@
   - Test duplicate file creation fails (quickstart step 8, FR-009a)
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T017** [P] Integration test: Rename file in `tests/integration/rename.test.ts`
+- [x] **T017** [P] Integration test: Rename file in `tests/integration/rename.test.ts`
   - Mock existing file
   - Test rename operation (quickstart step 9)
   - Assert file renamed in file system (mock)
   - Assert tree updates with new name
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T018** [P] Integration test: Copy and move operations in `tests/integration/copy-move.test.ts`
+- [x] **T018** [P] Integration test: Copy and move operations in `tests/integration/copy-move.test.ts`
   - Mock source file and destination directory
   - Test copy file (quickstart step 10)
   - Test move directory (quickstart step 14)
@@ -203,7 +203,7 @@
   - Assert tree updates correctly
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T019** [P] Integration test: Delete file and directory in `tests/integration/delete.test.ts`
+- [x] **T019** [P] Integration test: Delete file and directory in `tests/integration/delete.test.ts`
   - Mock file and non-empty directory
   - Test delete file (quickstart step 11)
   - Test delete non-empty directory with confirmation (quickstart steps 13, FR-012a)
@@ -212,7 +212,7 @@
   - Assert tree updates after deletion
   - **Expected**: Test FAILS (no implementation)
 
-- [ ] **T020** [P] Integration test: Open with system app in `tests/integration/system-app.test.ts`
+- [x] **T020** [P] Integration test: Open with system app in `tests/integration/system-app.test.ts`
   - Mock file and system command execution
   - Test open with system app (quickstart step 15)
   - Assert correct command used (open on macOS, xdg-open on Linux)
