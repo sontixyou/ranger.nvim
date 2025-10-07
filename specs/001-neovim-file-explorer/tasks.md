@@ -225,7 +225,7 @@
 
 ### Models (Parallel - Different Files)
 
-- [ ] **T021** [P] Implement types in `src/models/types.ts`
+- [x] **T021** [P] Implement types in `src/models/types.ts`
   - Define FileNode interface
   - Define DirectoryNode interface
   - Define TreeNode discriminated union type
@@ -235,14 +235,14 @@
   - Add type guard functions (isFile, isDirectory)
   - **Verify**: T004 contract test now PASSES
 
-- [ ] **T022** [P] Implement TreeNode utilities in `src/models/tree-node.ts`
+- [x] **T022** [P] Implement TreeNode utilities in `src/models/tree-node.ts`
   - Implement createFileNode(entry, basePath) helper
   - Implement createDirectoryNode(entry, basePath) helper
   - Implement node comparison/sorting logic
   - Export utility functions
   - **Verify**: Unit tests pass
 
-- [ ] **T023** [P] Implement TreeState manager in `src/models/tree-state.ts`
+- [x] **T023** [P] Implement TreeState manager in `src/models/tree-state.ts`
   - Implement TreeState creation function
   - Implement state update functions (cursor, search, showHidden)
   - Ensure immutable state updates
