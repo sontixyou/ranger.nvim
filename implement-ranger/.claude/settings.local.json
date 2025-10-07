@@ -8,7 +8,8 @@
       "Read(//Users/kengo/projects/lua-projects/nvim/ranger/**)",
       "Bash(.specify/scripts/bash/update-agent-context.sh:*)",
       "Bash(implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)",
-      "Bash(deno check:*)"
+      "Bash(deno check:*)",
+      "Bash(./implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)"
     ],
     "deny": [],
     "ask": []
