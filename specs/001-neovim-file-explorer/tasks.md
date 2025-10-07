@@ -251,7 +251,7 @@
 
 ### Services (Sequential - Dependencies on Models)
 
-- [ ] **T024** Implement file system service in `src/services/file-system.ts`
+- [x] **T024** Implement file system service in `src/services/file-system.ts`
   - Implement createFile(path, content?) using Deno.writeTextFileSync
   - Implement createDirectory(path, recursive?) using Deno.mkdirSync
   - Implement deleteFile(path) using Deno.removeSync
@@ -265,7 +265,7 @@
   - **Constitutional Check**: All functions MUST be synchronous
   - **Verify**: T005 contract test now PASSES
 
-- [ ] **T025** Implement tree builder service in `src/services/tree-builder.ts`
+- [x] **T025** Implement tree builder service in `src/services/tree-builder.ts`
   - Implement buildTree(rootPath, showHidden) using Deno.readDirSync
   - Implement loadChildren(node, showHidden) with Deno.readDirSync
   - Implement expandNode(node, showHidden)
@@ -278,7 +278,7 @@
   - **Constitutional Check**: All functions MUST be synchronous
   - **Verify**: T006 contract test now PASSES
 
-- [ ] **T026** Implement search service in `src/services/search.ts`
+- [x] **T026** Implement search service in `src/services/search.ts`
   - Implement createSearchQuery(text)
   - Implement executeSearch(query, root) with linear scan
   - Implement matchesQuery(node, query) with case-insensitive match
@@ -288,7 +288,7 @@
   - **Constitutional Check**: All functions MUST be synchronous
   - **Verify**: T007 contract test now PASSES
 
-- [ ] **T027** Implement system app service in `src/services/system-app.ts`
+- [x] **T027** Implement system app service in `src/services/system-app.ts`
   - Implement detectPlatform() using Deno.build.os
   - Implement openWithSystemApp(path) using Deno.Command
   - Use "open" command on macOS (darwin)
