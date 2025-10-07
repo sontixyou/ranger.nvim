@@ -300,7 +300,7 @@
 
 ### UI Implementation (Sequential - Dependencies on Services)
 
-- [ ] **T028** Implement tree renderer in `src/ui/tree-renderer.ts`
+- [x] **T028** Implement tree renderer in `src/ui/tree-renderer.ts`
   - Implement createTreeBuffer(denops) using nvim_create_buf
   - Set buffer options (buftype=nofile, modifiable=false, etc.)
   - Implement renderTreeToBuffer(denops, bufnr, nodes, cursorLine)
@@ -310,7 +310,7 @@
   - **Constitutional Check**: All denops calls MUST be synchronous
   - **Verify**: T008 contract test (partial) now PASSES
 
-- [ ] **T029** Implement user interaction in `src/ui/interaction.ts`
+- [x] **T029** Implement user interaction in `src/ui/interaction.ts`
   - Implement setupKeybindings(denops, bufnr, mappings)
   - Create buffer-local key mappings using nvim_buf_set_keymap
   - Implement getNodeAtCursor(denops, state)
