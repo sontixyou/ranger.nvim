@@ -70,14 +70,14 @@ export async function main(denops: Denops): Promise<void> {
         if (globalState?.winid && await isValidWin(denops, globalState.winid)) {
           // Close the sidebar and restore focus
           await closeTreeSidebar(denops, globalState.winid, globalState.prevWinid);
-          
+
           // Clear window tracking but preserve bufnr for reuse
           globalState = {
             ...globalState,
             winid: undefined,
             prevWinid: undefined,
           };
-          
+
           await notify(denops, "Closed tree sidebar", "info");
           return;
         }

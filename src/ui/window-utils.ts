@@ -39,10 +39,10 @@ export async function isReusableTreeBuffer(denops: Denops, bufnr: number): Promi
   try {
     const exists = await denops.call("bufexists", bufnr) as number;
     if (!exists) return false;
-    
+
     const listed = await denops.call("buflisted", bufnr) as number;
     if (listed) return false; // We want unlisted scratch buffers
-    
+
     const buftype = await denops.call("nvim_buf_get_option", bufnr, "buftype") as string;
     return buftype === "nofile";
   } catch {
@@ -79,7 +79,7 @@ export async function openSidebarWindow(denops: Denops): Promise<number> {
   // Create a left sidebar window with fixed width
   await denops.cmd(`topleft vertical ${SIDEBAR_WIDTH} new`);
   const winid = await denops.call("nvim_get_current_win") as number;
-  
+
   return winid;
 }
 
@@ -101,7 +101,7 @@ export async function closeTreeSidebar(
   } catch {
     // Ignore errors if window is already closed
   }
-  
+
   // Restore focus to previous window if it's still valid
   if (prevWinid && await isValidWin(denops, prevWinid)) {
     try {
