@@ -323,7 +323,7 @@
 
 ### Main Entry Point (Sequential - Dependencies on All Above)
 
-- [ ] **T030** Implement denops main entry in `denops/ranger/main.ts`
+- [x] **T030** Implement denops main entry in `denops/ranger/main.ts`
   - Import all services and UI modules
   - Export main(denops) function
   - Implement denops.dispatcher with commands:
@@ -341,7 +341,7 @@
   - **Constitutional Check**: All dispatcher functions MUST be synchronous
   - **Verify**: Integration tests T010-T020 now PASS
 
-- [ ] **T031** Implement Vim plugin registration in `plugin/ranger.vim`
+- [x] **T031** Implement Vim plugin registration in `plugin/ranger.vim`
   - Check g:loaded_ranger to prevent double loading
   - Register denops plugin: `call denops#plugin#register('ranger')`
   - Create user command: `:RangerOpen` → `call denops#notify('ranger', 'openTree', [])`
@@ -353,7 +353,7 @@
 
 ## Phase 3.4: Integration
 
-- [ ] **T032** Connect all components in main workflow
+- [x] **T032** Connect all components in main workflow
   - Test complete file explorer workflow end-to-end
   - Verify tree building from file system
   - Verify file operations update tree state
@@ -361,7 +361,7 @@
   - Verify UI updates in response to state changes
   - **Verify**: All integration tests T010-T020 PASS
 
-- [ ] **T033** Add error handling and user feedback
+- [x] **T033** Add error handling and user feedback
   - Wrap file system operations in try-catch
   - Display user-friendly error messages via notify()
   - Handle permission errors gracefully
@@ -369,7 +369,7 @@
   - Add confirmation for destructive operations
   - **Verify**: Error scenarios handled correctly
 
-- [ ] **T034** Performance validation for large directories
+- [x] **T034** Performance validation for large directories
   - Test with 1,000 files in single directory (quickstart)
   - Verify no performance degradation (FR-029)
   - Verify search completes <100ms (FR-030)
