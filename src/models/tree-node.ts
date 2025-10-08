@@ -7,7 +7,7 @@
  * Constitutional requirement: All operations must be synchronous.
  */
 
-import type { TreeNode, FileNode, DirectoryNode } from "./types.ts";
+import type { DirectoryNode, FileNode, TreeNode } from "./types.ts";
 
 /**
  * Creates a FileNode from a Deno.DirEntry and base path.
@@ -24,9 +24,7 @@ export function createFileNode(entry: Deno.DirEntry, basePath: string): FileNode
   const hidden = entry.name.startsWith(".");
 
   // Extract file extension
-  const fileType = entry.name.includes(".")
-    ? entry.name.split(".").pop() || ""
-    : "";
+  const fileType = entry.name.includes(".") ? entry.name.split(".").pop() || "" : "";
 
   return {
     type: "file",

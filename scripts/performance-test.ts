@@ -79,10 +79,10 @@ console.log("Test 3: Search Performance (FR-030)");
 console.log("------------------------------------");
 
 const searchQueries = [
-  "file_0500",  // Single result
-  "file",       // All results
-  ".ts",        // Specific extension
-  "999",        // End of list
+  "file_0500", // Single result
+  "file", // All results
+  ".ts", // Specific extension
+  "999", // End of list
   "nonexistent", // No results
 ];
 
@@ -99,7 +99,9 @@ for (const queryText of searchQueries) {
   const passed = searchTime < 100;
 
   const status = passed ? "✓ PASS" : "✗ FAIL";
-  console.log(`  "${queryText}": ${searchTime.toFixed(2)}ms (${results.matchedPaths.size} matches) ${status}`);
+  console.log(
+    `  "${queryText}": ${searchTime.toFixed(2)}ms (${results.matchedPaths.size} matches) ${status}`,
+  );
 
   if (!passed) {
     allSearchesPassed = false;

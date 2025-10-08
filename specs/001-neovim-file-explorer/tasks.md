@@ -407,14 +407,14 @@
   - Document any issues found
   - **Verify**: All quickstart scenarios PASS
 
-- [ ] **T039** [P] Update documentation
+- [x] **T039** [P] Update documentation
   - Create README.md with installation instructions
   - Document keybindings and configuration
   - Add usage examples
   - Document constitutional constraints (synchronous only)
   - **Verify**: Documentation complete and accurate
 
-- [ ] **T040** Code cleanup and refactoring
+- [x] **T040** Code cleanup and refactoring
   - Remove any dead code
   - Ensure consistent naming conventions
   - Verify TypeScript strict mode compliance
@@ -422,7 +422,7 @@
   - Remove duplication where possible
   - **Verify**: Code quality checks pass
 
-- [ ] **T041** Final constitutional compliance audit
+- [x] **T041** Final constitutional compliance audit
   - Verify NO async/await anywhere in codebase
   - Verify all Deno APIs use *Sync variants
   - Verify all denops calls are synchronous

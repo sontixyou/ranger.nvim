@@ -9,7 +9,7 @@
  */
 
 import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
-import type { TreeState, TreeNode } from "../models/types.ts";
+import type { TreeNode, TreeState } from "../models/types.ts";
 import { getVisibleNodes } from "../services/tree-builder.ts";
 
 /**
@@ -112,11 +112,7 @@ export async function notify(
   level: "info" | "warn" | "error",
 ): Promise<void> {
   // Map level to Neovim highlight group
-  const hlgroup = level === "error"
-    ? "ErrorMsg"
-    : level === "warn"
-    ? "WarningMsg"
-    : "None";
+  const hlgroup = level === "error" ? "ErrorMsg" : level === "warn" ? "WarningMsg" : "None";
 
   // Display message with appropriate highlighting
   if (hlgroup === "None") {
