@@ -5,7 +5,6 @@
  * EXPECTED: These tests will FAIL until src/models/types.ts is implemented (T021)
  */
 
-import { describe, it, expect } from "npm:vitest@^1.0.0";
 import type {
   FileNode,
   DirectoryNode,
@@ -14,54 +13,55 @@ import type {
   FileOperation,
   SearchQuery,
 } from "../../src/models/types.ts";
+import { assertEquals } from "../test-utils.ts";
 
-describe("FileNode interface", () => {
-  it("should have required type literal 'file'", () => {
-    const fileNode: FileNode = {
-      type: "file",
-      name: "test.ts",
-      path: "/absolute/path/test.ts",
-      hidden: false,
-      fileType: "ts",
-      size: 1024,
-      mtime: new Date(),
-    };
-    expect(fileNode.type).toBe("file");
-  });
+Deno.test("FileNode interface - should have required type literal 'file'", () => {
+  const fileNode: FileNode = {
+    type: "file",
+    name: "test.ts",
+    path: "/absolute/path/test.ts",
+    hidden: false,
+    fileType: "ts",
+    size: 1024,
+    mtime: new Date(),
+  };
+  assertEquals(fileNode.type, "file");
+});
 
-  it("should enforce all required properties", () => {
-    const fileNode: FileNode = {
-      type: "file",
-      name: "README.md",
-      path: "/home/user/README.md",
-      hidden: false,
-      fileType: "md",
-      size: 2048,
-      mtime: new Date("2025-01-01"),
-    };
+Deno.test("FileNode interface - should enforce all required properties", () => {
+  const fileNode: FileNode = {
+    type: "file",
+    name: "README.md",
+    path: "/home/user/README.md",
+    hidden: false,
+    fileType: "md",
+    size: 2048,
+    mtime: new Date("2025-01-01"),
+  };
 
-    expect(fileNode.name).toBe("README.md");
-    expect(fileNode.path).toBe("/home/user/README.md");
-    expect(fileNode.hidden).toBe(false);
-    expect(fileNode.fileType).toBe("md");
-    expect(fileNode.size).toBe(2048);
-    expect(fileNode.mtime).toBeInstanceOf(Date);
-  });
+  assertEquals(fileNode.name, "README.md");
+  assertEquals(fileNode.path, "/home/user/README.md");
+  assertEquals(fileNode.hidden, false);
+  assertEquals(fileNode.fileType, "md");
+  assertEquals(fileNode.size, 2048);
+  if (!(fileNode.mtime instanceof Date)) {
+    throw new Error("Expected mtime to be instance of Date");
+  }
+});
 
-  it("should support hidden files", () => {
-    const hiddenFile: FileNode = {
-      type: "file",
-      name: ".gitignore",
-      path: "/project/.gitignore",
-      hidden: true,
-      fileType: "",
-      size: 128,
-      mtime: new Date(),
-    };
+Deno.test("FileNode interface - should support hidden files", () => {
+  const hiddenFile: FileNode = {
+    type: "file",
+    name: ".gitignore",
+    path: "/project/.gitignore",
+    hidden: true,
+    fileType: "",
+    size: 128,
+    mtime: new Date(),
+  };
 
-    expect(hiddenFile.hidden).toBe(true);
-    expect(hiddenFile.name.startsWith(".")).toBe(true);
-  });
+  assertEquals(hiddenFile.hidden, true);
+  assertEquals(hiddenFile.name.startsWith("."), true);
 });
 
 describe("DirectoryNode interface", () => {

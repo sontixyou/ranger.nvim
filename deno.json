@@ -31,5 +31,14 @@
       "tags": ["recommended"],
       "exclude": []
     }
+  },
+  "tasks": {
+    "test": "deno test --allow-read --allow-write --allow-run",
+    "test:coverage": "deno test --allow-read --allow-write --allow-run --coverage=coverage",
+    "test:watch": "deno test --allow-read --allow-write --allow-run --watch"
+  },
+  "test": {
+    "include": ["tests/**/*.test.ts"],
+    "exclude": []
   }
 }
