@@ -515,7 +515,32 @@ export async function main(denops: Denops): Promise<void> {
     },
   };
 
+  // Register user commands
   await denops.cmd(
     `command! -nargs=0 RangerOpen call denops#notify('${denops.name}', 'openTree', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerCreateFile call denops#notify('${denops.name}', 'createFile', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerCreateDirectory call denops#notify('${denops.name}', 'createDirectory', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerDelete call denops#notify('${denops.name}', 'deleteNode', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerRename call denops#notify('${denops.name}', 'renameNode', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerToggleHidden call denops#notify('${denops.name}', 'toggleHidden', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerSearch call denops#notify('${denops.name}', 'search', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerSystemOpen call denops#notify('${denops.name}', 'systemOpen', [])`,
+  );
+  await denops.cmd(
+    `command! -nargs=0 RangerRefresh call denops#notify('${denops.name}', 'refresh', [])`,
   );
 }
