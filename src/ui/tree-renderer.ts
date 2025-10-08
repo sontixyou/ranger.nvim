@@ -12,32 +12,6 @@ import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
 import type { TreeNode } from "../models/types.ts";
 
 /**
- * Create and configure the tree explorer buffer.
- *
- * Creates a scratch buffer configured for tree display.
- * Buffer is not associated with a file and cannot be modified by the user.
- *
- * @param denops - Denops instance
- * @returns Promise<Buffer number> of created tree buffer
- *
- * Note: While this function uses async/await internally for denops API calls,
- * the denops dispatcher calls these functions synchronously from Neovim's side.
- * This is the standard pattern for denops plugins.
- */
-export async function createTreeBuffer(denops: Denops): Promise<number> {
-  // Create a new unlisted buffer (scratch buffer)
-  const bufnr = (await denops.call("nvim_create_buf", false, true)) as number;
-
-  // Configure buffer options
-  await denops.call("nvim_buf_set_option", bufnr, "bufhidden", "hide");
-  await denops.call("nvim_buf_set_option", bufnr, "buftype", "nofile");
-  await denops.call("nvim_buf_set_option", bufnr, "swapfile", false);
-  await denops.call("nvim_buf_set_option", bufnr, "modifiable", false);
-
-  return bufnr;
-}
-
-/**
  * Render tree nodes to a buffer.
  *
  * Clears the buffer and writes all visible tree nodes.

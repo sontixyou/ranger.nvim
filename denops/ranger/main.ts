@@ -9,7 +9,7 @@
 
 import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
 import type { TreeState } from "../../src/models/types.ts";
-import { createTreeState, updateState } from "../../src/models/tree-state.ts";
+import { updateState } from "../../src/models/tree-state.ts";
 import {
   buildTree,
   getVisibleNodes,
@@ -25,7 +25,7 @@ import {
 } from "../../src/services/file-system.ts";
 import { createSearchQuery, executeSearch } from "../../src/services/search.ts";
 import { openWithSystemApp } from "../../src/services/system-app.ts";
-import { createTreeBuffer, renderTreeToBuffer } from "../../src/ui/tree-renderer.ts";
+import { renderTreeToBuffer } from "../../src/ui/tree-renderer.ts";
 import {
   confirm,
   getNodeAtCursor,
@@ -33,6 +33,13 @@ import {
   notify,
   setupKeybindings,
 } from "../../src/ui/interaction.ts";
+import {
+  closeTreeSidebar,
+  createTreeBuffer,
+  isReusableTreeBuffer,
+  isValidWin,
+  openSidebarWindow,
+} from "../../src/ui/window-utils.ts";
 
 // Global state for the tree explorer
 let globalState: TreeState | null = null;
@@ -49,26 +56,66 @@ export async function main(denops: Denops): Promise<void> {
   // Register dispatcher commands
   denops.dispatcher = {
     /**
-     * Open the tree explorer buffer.
+     * Open/toggle the tree explorer sidebar.
      *
-     * Creates a new buffer, builds the tree from current directory,
-     * and sets up keybindings.
+     * Constitutional requirement: All operations execute synchronously.
+     * This function implements toggle behavior:
+     * - If sidebar is open, close it and restore focus
+     * - If sidebar is closed, open it in left sidebar with fixed width 30
+     * - Preserves existing buffers and does not replace current window
      */
     async openTree(): Promise<void> {
       try {
+        // Check if tree sidebar is already open
+        if (globalState?.winid && await isValidWin(denops, globalState.winid)) {
+          // Close the sidebar and restore focus
+          await closeTreeSidebar(denops, globalState.winid, globalState.prevWinid);
+          
+          // Clear window tracking but preserve bufnr for reuse
+          globalState = {
+            ...globalState,
+            winid: undefined,
+            prevWinid: undefined,
+          };
+          
+          await notify(denops, "Closed tree sidebar", "info");
+          return;
+        }
+
         // Get current working directory
         const cwd = (await denops.call("getcwd")) as string;
 
+        // Save current window for focus restoration
+        const prevWinid = await denops.call("nvim_get_current_win") as number;
+
+        // Open sidebar window
+        const winid = await openSidebarWindow(denops);
+
+        // Check if we can reuse existing buffer, otherwise create new one
+        let bufnr = globalState?.bufnr;
+        if (!bufnr || !await isReusableTreeBuffer(denops, bufnr)) {
+          bufnr = await createTreeBuffer(denops);
+        }
+
+        // Set the buffer in the sidebar window
+        await denops.call("nvim_set_current_buf", bufnr);
+
         // Build tree from current directory
-        const rootNode = buildTree(cwd, false);
+        const rootNode = buildTree(cwd, globalState?.showHidden ?? false);
 
-        // Create tree buffer
-        const bufnr = await createTreeBuffer(denops);
+        // Update global state
+        globalState = {
+          rootPath: cwd,
+          rootNode,
+          cursorLine: globalState?.cursorLine ?? 0,
+          showHidden: globalState?.showHidden ?? false,
+          searchQuery: globalState?.searchQuery ?? "",
+          bufnr,
+          winid,
+          prevWinid,
+        };
 
-        // Initialize tree state
-        globalState = createTreeState(cwd, rootNode, bufnr);
-
-        // Set up keybindings
+        // Set up keybindings for the buffer
         await setupKeybindings(denops, bufnr, {
           "<CR>": "open",
           "<Tab>": "expandCollapse",
@@ -86,16 +133,13 @@ export async function main(denops: Denops): Promise<void> {
         });
 
         // Render tree
-        const visibleNodes = getVisibleNodes(rootNode, false);
-        await renderTreeToBuffer(denops, bufnr, visibleNodes, 0);
+        const visibleNodes = getVisibleNodes(rootNode, globalState.showHidden);
+        await renderTreeToBuffer(denops, bufnr, visibleNodes, globalState.cursorLine);
 
-        // Open buffer in current window
-        await denops.call("nvim_set_current_buf", bufnr);
-
-        await notify(denops, `Opened tree: ${cwd}`, "info");
+        await notify(denops, `Opened tree sidebar: ${cwd}`, "info");
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        await notify(denops, `Failed to open tree: ${message}`, "error");
+        await notify(denops, `Failed to toggle tree: ${message}`, "error");
       }
     },
 
@@ -136,7 +180,7 @@ export async function main(denops: Denops): Promise<void> {
         const rootNode = updateNodeInTree(
           globalState.rootNode,
           node.path,
-          (n) => toggleNode(n as typeof node, globalState.showHidden),
+          (n) => toggleNode(n as typeof node, globalState!.showHidden),
         );
         globalState = updateState(globalState, { rootNode });
 
