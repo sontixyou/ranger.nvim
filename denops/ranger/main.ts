@@ -10,7 +10,12 @@
 import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
 import type { TreeState } from "../../src/models/types.ts";
 import { createTreeState, updateState } from "../../src/models/tree-state.ts";
-import { buildTree, getVisibleNodes, toggleNode } from "../../src/services/tree-builder.ts";
+import {
+  buildTree,
+  getVisibleNodes,
+  toggleNode,
+  updateNodeInTree,
+} from "../../src/services/tree-builder.ts";
 import {
   createDirectory,
   createFile,
@@ -127,11 +132,12 @@ export async function main(denops: Denops): Promise<void> {
         const node = await getNodeAtCursor(denops, globalState);
         if (!node || node.type !== "directory") return;
 
-        // Toggle node (this modifies the tree structure)
-        toggleNode(node, globalState.showHidden);
-
-        // Rebuild tree to reflect the change (simplified approach)
-        const rootNode = buildTree(globalState.rootPath, globalState.showHidden);
+        // Update the tree with toggled node state
+        const rootNode = updateNodeInTree(
+          globalState.rootNode,
+          node.path,
+          (n) => toggleNode(n as typeof node, globalState.showHidden),
+        );
         globalState = updateState(globalState, { rootNode });
 
         // Re-render

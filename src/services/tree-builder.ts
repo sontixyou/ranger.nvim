@@ -261,3 +261,44 @@ export function refreshNode(node: TreeNode, showHidden: boolean): TreeNode {
     };
   }
 }
+
+/**
+ * Update a node in the tree by path.
+ *
+ * Creates a new tree with the specified node updated.
+ * Maintains immutability by recreating the path from root to target node.
+ *
+ * @param root - Root DirectoryNode
+ * @param targetPath - Path of node to update
+ * @param updateFn - Function that transforms the node
+ * @returns New tree with updated node, or original tree if path not found
+ */
+export function updateNodeInTree(
+  root: DirectoryNode,
+  targetPath: string,
+  updateFn: (node: TreeNode) => TreeNode,
+): DirectoryNode {
+  // If root is the target, update and return
+  if (root.path === targetPath) {
+    return updateFn(root) as DirectoryNode;
+  }
+
+  // Recursively update children
+  const updatedChildren = root.children.map((child) => {
+    if (child.path === targetPath) {
+      return updateFn(child);
+    }
+
+    if (child.type === "directory" && child.expanded) {
+      return updateNodeInTree(child, targetPath, updateFn);
+    }
+
+    return child;
+  });
+
+  // Return new root with updated children
+  return {
+    ...root,
+    children: updatedChildren,
+  };
+}
