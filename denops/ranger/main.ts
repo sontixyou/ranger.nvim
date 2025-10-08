@@ -10,26 +10,23 @@
 import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
 import type { TreeState } from "../../src/models/types.ts";
 import { createTreeState, updateState } from "../../src/models/tree-state.ts";
-import { buildTree, toggleNode, getVisibleNodes } from "../../src/services/tree-builder.ts";
+import { buildTree, getVisibleNodes, toggleNode } from "../../src/services/tree-builder.ts";
 import {
-  createFile,
   createDirectory,
-  deleteFile,
+  createFile,
   deleteDirectory,
+  deleteFile,
   rename,
 } from "../../src/services/file-system.ts";
 import { createSearchQuery, executeSearch } from "../../src/services/search.ts";
 import { openWithSystemApp } from "../../src/services/system-app.ts";
+import { createTreeBuffer, renderTreeToBuffer } from "../../src/ui/tree-renderer.ts";
 import {
-  createTreeBuffer,
-  renderTreeToBuffer,
-} from "../../src/ui/tree-renderer.ts";
-import {
-  setupKeybindings,
-  getNodeAtCursor,
-  notify,
   confirm,
+  getNodeAtCursor,
   input,
+  notify,
+  setupKeybindings,
 } from "../../src/ui/interaction.ts";
 
 // Global state for the tree explorer

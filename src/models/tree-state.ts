@@ -7,7 +7,7 @@
  * Constitutional requirement: All operations must be synchronous.
  */
 
-import type { TreeState, DirectoryNode } from "./types.ts";
+import type { DirectoryNode, TreeState } from "./types.ts";
 
 /**
  * Creates a new TreeState from a root directory node.

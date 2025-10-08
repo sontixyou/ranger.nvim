@@ -10,7 +10,8 @@
       "Bash(implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)",
       "Bash(deno check:*)",
       "Bash(./implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)",
-      "Bash(deno run:*)"
+      "Bash(deno run:*)",
+      "Bash(deno fmt:*)"
     ],
     "deny": [],
     "ask": []

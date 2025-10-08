@@ -11,7 +11,7 @@
  * - FR-030: <100ms search latency for 1,000 nodes
  */
 
-import type { SearchQuery, TreeNode, DirectoryNode } from "../models/types.ts";
+import type { DirectoryNode, SearchQuery, TreeNode } from "../models/types.ts";
 
 /**
  * Create a search query from user input.

@@ -11,12 +11,8 @@
  * - FR-029: Support up to 1,000 files
  */
 
-import type { TreeNode, DirectoryNode } from "../models/types.ts";
-import {
-  createTreeNode,
-  sortNodes,
-  filterVisible,
-} from "../models/tree-node.ts";
+import type { DirectoryNode, TreeNode } from "../models/types.ts";
+import { createTreeNode, filterVisible, sortNodes } from "../models/tree-node.ts";
 
 /**
  * Build a tree structure from a root directory path.
