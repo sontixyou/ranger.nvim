@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.specify/scripts/bash/create-new-feature.sh:*)",
+      "Read(//Users/kengo/projects/lua-projects/nvim/ranger/specs/001-neovim-file-explorer/**)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(.specify/scripts/bash/setup-plan.sh:*)",
+      "Read(//Users/kengo/projects/lua-projects/nvim/ranger/**)",
+      "Bash(.specify/scripts/bash/update-agent-context.sh:*)",
+      "Bash(implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(deno check:*)",
+      "Bash(./implement-ranger/.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(deno run:*)",
+      "Bash(deno fmt:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
