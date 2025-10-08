@@ -7,25 +7,8 @@ if exists('g:loaded_ranger')
 endif
 let g:loaded_ranger = 1
 
-" Register denops plugin
-" This tells Neovim to load the TypeScript plugin via denops.vim
-call denops#plugin#register('ranger')
-
-" User Commands
-" ============
-
-" Open the tree explorer
-command! -nargs=0 RangerOpen call denops#notify('ranger', 'openTree', [])
-
-" File operations (require tree to be open)
-command! -nargs=0 RangerCreateFile call denops#notify('ranger', 'createFile', [])
-command! -nargs=0 RangerCreateDirectory call denops#notify('ranger', 'createDirectory', [])
-command! -nargs=0 RangerDelete call denops#notify('ranger', 'deleteNode', [])
-command! -nargs=0 RangerRename call denops#notify('ranger', 'renameNode', [])
-command! -nargs=0 RangerToggleHidden call denops#notify('ranger', 'toggleHidden', [])
-command! -nargs=0 RangerSearch call denops#notify('ranger', 'search', [])
-command! -nargs=0 RangerSystemOpen call denops#notify('ranger', 'systemOpen', [])
-command! -nargs=0 RangerRefresh call denops#notify('ranger', 'refresh', [])
+" NOTE: User commands are defined in denops/ranger/main.ts
+" The denops plugin is automatically detected from the denops/ranger/ directory
 
 " Default Keybindings
 " ==================
