@@ -17,6 +17,7 @@ import {
   getVisibleNodes,
   sortNodes,
   refreshNode,
+  updateNodeInTree,
 } from "../../src/services/tree-builder.ts";
 
 const TEST_DIR = "/tmp/ranger-test-tree";
@@ -327,5 +328,116 @@ describe("refreshNode", () => {
     };
 
     expect(() => refreshNode(node, false)).toThrow();
+  });
+});
+
+describe("updateNodeInTree", () => {
+  it("should update root node", () => {
+    const root = buildTree(TEST_DIR, false);
+    const updated = updateNodeInTree(root, TEST_DIR, (node) => ({
+      ...node,
+      name: "updated-root",
+    }));
+    expect(updated.name).toBe("updated-root");
+    expect(updated.path).toBe(TEST_DIR);
+  });
+
+  it("should update child node", () => {
+    const root = buildTree(TEST_DIR, false);
+    const childPath = `${TEST_DIR}/file.txt`;
+    const updated = updateNodeInTree(root, childPath, (node) => ({
+      ...node,
+      name: "updated-file.txt",
+    }));
+
+    // Find the updated child
+    const child = updated.children.find((c) => c.path === childPath);
+    expect(child?.name).toBe("updated-file.txt");
+  });
+
+  it("should update nested node when parent is expanded", () => {
+    // Create a tree with expanded subdirectory
+    const root = buildTree(TEST_DIR, false);
+    const subdirPath = `${TEST_DIR}/subdir`;
+
+    // First expand the subdirectory
+    const expandedRoot = updateNodeInTree(root, subdirPath, (node) =>
+      expandNode(node as DirectoryNode, false)
+    );
+
+    // Now update a nested file
+    const nestedPath = `${TEST_DIR}/subdir/nested.txt`;
+    const updated = updateNodeInTree(expandedRoot, nestedPath, (node) => ({
+      ...node,
+      name: "updated-nested.txt",
+    }));
+
+    // Find the subdir and check if nested file is updated
+    const subdir = updated.children.find(
+      (c) => c.path === subdirPath,
+    ) as DirectoryNode;
+    expect(subdir).toBeDefined();
+    expect(subdir.expanded).toBe(true);
+
+    const nestedFile = subdir.children.find((c) => c.path === nestedPath);
+    expect(nestedFile?.name).toBe("updated-nested.txt");
+  });
+
+  it("should return original tree if path not found", () => {
+    const root = buildTree(TEST_DIR, false);
+    const updated = updateNodeInTree(root, "/nonexistent/path", (node) => ({
+      ...node,
+      name: "should-not-update",
+    }));
+
+    // Tree should remain unchanged
+    expect(updated).toEqual(root);
+  });
+
+  it("should maintain immutability", () => {
+    const root = buildTree(TEST_DIR, false);
+    const childPath = `${TEST_DIR}/file.txt`;
+    const updated = updateNodeInTree(root, childPath, (node) => ({
+      ...node,
+      name: "updated-file.txt",
+    }));
+
+    // Original root should not be modified
+    expect(root).not.toBe(updated);
+    const originalChild = root.children.find((c) => c.path === childPath);
+    expect(originalChild?.name).toBe("file.txt");
+
+    // Updated root should have the change
+    const updatedChild = updated.children.find((c) => c.path === childPath);
+    expect(updatedChild?.name).toBe("updated-file.txt");
+  });
+
+  it("should work with toggleNode to expand/collapse directories", () => {
+    const root = buildTree(TEST_DIR, false);
+    const subdirPath = `${TEST_DIR}/subdir`;
+
+    // Initially collapsed
+    const subdir = root.children.find((c) => c.path === subdirPath) as DirectoryNode;
+    expect(subdir?.expanded).toBe(false);
+
+    // Toggle to expand
+    const expanded = updateNodeInTree(root, subdirPath, (node) =>
+      toggleNode(node as DirectoryNode, false)
+    );
+    const expandedSubdir = expanded.children.find(
+      (c) => c.path === subdirPath,
+    ) as DirectoryNode;
+    expect(expandedSubdir.expanded).toBe(true);
+    expect(expandedSubdir.children.length).toBeGreaterThan(0);
+
+    // Toggle to collapse
+    const collapsed = updateNodeInTree(expanded, subdirPath, (node) =>
+      toggleNode(node as DirectoryNode, false)
+    );
+    const collapsedSubdir = collapsed.children.find(
+      (c) => c.path === subdirPath,
+    ) as DirectoryNode;
+    expect(collapsedSubdir.expanded).toBe(false);
+    expect(collapsedSubdir.children.length).toBeGreaterThan(0); // Children still loaded
   });
 });
