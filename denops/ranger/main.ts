@@ -13,6 +13,8 @@ import { updateState } from "../../src/models/tree-state.ts";
 import {
   buildTree,
   collectExpandedPaths,
+  expandPathToFile,
+  findNodeIndexInVisibleNodes,
   getVisibleNodes,
   restoreExpandedState,
   toggleNode,
@@ -30,6 +32,7 @@ import { openWithSystemApp } from "../../src/services/system-app.ts";
 import { renderTreeToBuffer } from "../../src/ui/tree-renderer.ts";
 import {
   confirm,
+  getCurrentFilePath,
   getNodeAtCursor,
   input,
   notify,
@@ -90,6 +93,9 @@ export async function main(denops: Denops): Promise<void> {
         // Save current window for focus restoration
         const prevWinid = await denops.call("nvim_get_current_win") as number;
 
+        // Get current file path for cursor positioning
+        const currentFilePath = await getCurrentFilePath(denops, prevWinid);
+
         // Open sidebar window
         const winid = await openSidebarWindow(denops);
 
@@ -119,11 +125,30 @@ export async function main(denops: Denops): Promise<void> {
           );
         }
 
+        // Expand path to current file if available
+        if (currentFilePath) {
+          rootNode = expandPathToFile(
+            rootNode,
+            currentFilePath,
+            globalState?.showHidden ?? false,
+          );
+        }
+
+        // Calculate cursor position for current file
+        let cursorLine = globalState?.cursorLine ?? 0;
+        if (currentFilePath) {
+          const visibleNodes = getVisibleNodes(rootNode, globalState?.showHidden ?? false);
+          const fileIndex = findNodeIndexInVisibleNodes(visibleNodes, currentFilePath);
+          if (fileIndex !== -1) {
+            cursorLine = fileIndex;
+          }
+        }
+
         // Update global state
         globalState = {
           rootPath: cwd,
           rootNode,
-          cursorLine: globalState?.cursorLine ?? 0,
+          cursorLine,
           showHidden: globalState?.showHidden ?? false,
           searchQuery: globalState?.searchQuery ?? "",
           bufnr,
