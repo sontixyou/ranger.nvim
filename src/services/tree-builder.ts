@@ -373,3 +373,75 @@ export function restoreExpandedState(
     children: updatedChildren,
   };
 }
+
+/**
+ * Expand all parent directories from root to target file path.
+ *
+ * Takes a file path and expands all directories along the path from the root
+ * to make the target file visible in the tree. This is useful for automatically
+ * revealing a specific file when opening the tree.
+ *
+ * If the target path doesn't exist or is outside the root path, returns the
+ * original tree unchanged.
+ *
+ * @param root - Root DirectoryNode to expand from
+ * @param targetPath - Absolute path to the target file
+ * @param showHidden - Whether to include hidden files/directories
+ * @returns New tree with path to target expanded, or original tree if path not found
+ */
+export function expandPathToFile(
+  root: DirectoryNode,
+  targetPath: string,
+  showHidden: boolean,
+): DirectoryNode {
+  // Check if target path is within root path
+  if (!targetPath.startsWith(root.path)) {
+    return root;
+  }
+
+  // Extract directory path components between root and target
+  const relativePath = targetPath.slice(root.path.length + 1);
+  const pathComponents = relativePath.split("/");
+
+  // Build list of directory paths to expand (exclude the final file name)
+  const dirsToExpand: string[] = [];
+  let currentPath = root.path;
+  for (let i = 0; i < pathComponents.length - 1; i++) {
+    currentPath = `${currentPath}/${pathComponents[i]}`;
+    dirsToExpand.push(currentPath);
+  }
+
+  // Expand each directory in sequence
+  let updatedRoot = root;
+  for (const dirPath of dirsToExpand) {
+    updatedRoot = updateNodeInTree(
+      updatedRoot,
+      dirPath,
+      (node) => {
+        if (node.type === "directory") {
+          return expandNode(node, showHidden);
+        }
+        return node;
+      },
+    );
+  }
+
+  return updatedRoot;
+}
+
+/**
+ * Find the index of a node in the visible nodes array.
+ *
+ * Searches through the visible nodes array to find the index of a node
+ * with the given path. Returns -1 if not found.
+ *
+ * @param visibleNodes - Array of visible nodes with depth information
+ * @param targetPath - Path of the node to find
+ * @returns Index in visible nodes array (0-indexed), or -1 if not found
+ */
+export function findNodeIndexInVisibleNodes(
+  visibleNodes: Array<{ node: TreeNode; depth: number }>,
+  targetPath: string,
+): number {
+  return visibleNodes.findIndex(({ node }) => node.path === targetPath);
+}

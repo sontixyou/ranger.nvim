@@ -98,6 +98,45 @@ export async function setCursor(
 }
 
 /**
+ * Get the full path of the file in the current buffer.
+ *
+ * Returns the absolute path of the file being edited in the current buffer,
+ * or null if the buffer has no associated file (e.g., unnamed buffer).
+ *
+ * @param denops - Denops instance
+ * @param winid - Window ID to get file path from
+ * @returns Absolute file path, or null if no file
+ */
+export async function getCurrentFilePath(
+  denops: Denops,
+  winid: number,
+): Promise<string | null> {
+  try {
+    // Get buffer number for the window
+    const bufnr = (await denops.call("nvim_win_get_buf", winid)) as number;
+
+    // Get buffer name (file path)
+    const bufname = (await denops.call("nvim_buf_get_name", bufnr)) as string;
+
+    // Return null if buffer has no name (unnamed buffer)
+    if (!bufname || bufname === "") {
+      return null;
+    }
+
+    // Convert to absolute path using fnamemodify
+    const absolutePath = (await denops.call(
+      "fnamemodify",
+      bufname,
+      ":p",
+    )) as string;
+
+    return absolutePath;
+  } catch (_error) {
+    return null;
+  }
+}
+
+/**
  * Display a notification message to the user.
  *
  * Shows a message in Neovim's command line with appropriate highlighting.
