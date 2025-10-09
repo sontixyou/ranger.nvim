@@ -49,18 +49,25 @@ use {
 
 ### Opening Ranger
 
-Use the `:RangerOpen` command to open the file explorer in the current working directory:
+Use the `:RangerOpen` command to toggle the file explorer sidebar. The sidebar opens on the left side with a fixed width of 30 columns:
 
 ```vim
-:RangerOpen
+:RangerOpen  " Toggle sidebar - opens if closed, closes if open
 ```
+
+**Behavior:**
+- **First call**: Opens sidebar on the left (30 columns wide) and focuses it
+- **Second call**: Closes sidebar and restores focus to previous window
+- **Width**: Fixed at 30 columns (not customizable)
+- **Position**: Always left side (not customizable)
+- **Buffer preservation**: Existing buffers remain unchanged
 
 Or add a keybinding to your `init.vim`/`init.lua`:
 
 ```vim
 " Enable global keybinding (disabled by default)
 let g:ranger_enable_global_keybinding = 1
-" This enables <leader>e to open ranger
+" This enables <leader>e to toggle ranger sidebar
 ```
 
 ### Default Keybindings
@@ -82,12 +89,14 @@ When the ranger buffer is active, these keybindings are available:
 
 **Note**: Copy (`c`), cut (`x`), and paste (`p`) keybindings are reserved for future implementation.
 
+**Refresh Behavior**: The sidebar does not automatically refresh when files change outside Neovim. Use `:RangerRefresh` or press `R` in the sidebar to update the tree view.
+
 ### User Commands
 
 All operations are also available as commands:
 
 ```vim
-:RangerOpen              " Open the tree explorer
+:RangerOpen              " Toggle the tree explorer sidebar
 :RangerCreateFile        " Create a new file
 :RangerCreateDirectory   " Create a new directory
 :RangerDelete            " Delete selected item
@@ -111,6 +120,7 @@ let g:ranger_enable_global_keybinding = 1
 ### Custom Keybindings
 
 Custom keybindings are not yet implemented but are planned for future releases.
+
 
 ## Architecture
 

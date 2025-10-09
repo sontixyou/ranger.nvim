@@ -77,6 +77,8 @@ export interface TreeState {
   showHidden: boolean; // Whether hidden files are visible
   searchQuery: string; // Current search query (empty if no search)
   bufnr: number; // Neovim buffer number for tree display
+  winid?: number; // Window ID for sidebar (if open)
+  prevWinid?: number; // Previous window ID for focus restoration
 }
 
 /**
