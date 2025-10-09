@@ -121,14 +121,6 @@ let g:ranger_enable_global_keybinding = 1
 
 Custom keybindings are not yet implemented but are planned for future releases.
 
-## Breaking Changes
-
-**Version 2.0+**: `:RangerOpen` behavior has changed from replacing the current window to toggling a left sidebar:
-
-- **Before**: Opened ranger in the current window, replacing its contents
-- **After**: Opens/closes a left sidebar (30 columns wide), preserving existing windows and buffers
-- **Migration**: No code changes needed - the toggle behavior is more intuitive
-- **Known Limitation**: Focus restoration across multiple tabs is not guaranteed
 
 ## Architecture
 
