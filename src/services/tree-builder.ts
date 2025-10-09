@@ -302,3 +302,74 @@ export function updateNodeInTree(
     children: updatedChildren,
   };
 }
+
+/**
+ * Collect all expanded directory paths from a tree.
+ *
+ * Recursively traverses the tree and collects paths of all directories
+ * that have expanded=true. Used to preserve expansion state when
+ * rebuilding the tree.
+ *
+ * @param root - Root DirectoryNode to collect from
+ * @returns Set of absolute paths for all expanded directories
+ */
+export function collectExpandedPaths(root: DirectoryNode): Set<string> {
+  const expandedPaths = new Set<string>();
+
+  function traverse(node: TreeNode) {
+    if (node.type === "directory") {
+      // Add this directory if it's expanded
+      if (node.expanded) {
+        expandedPaths.add(node.path);
+      }
+
+      // Recursively traverse children
+      for (const child of node.children) {
+        traverse(child);
+      }
+    }
+  }
+
+  traverse(root);
+  return expandedPaths;
+}
+
+/**
+ * Restore expansion state to a tree based on a set of expanded paths.
+ *
+ * Takes a freshly built tree and expands directories whose paths are
+ * in the expandedPaths set. This preserves user's expansion state
+ * across tree rebuilds (e.g., when toggling sidebar or refreshing).
+ *
+ * Constitutional requirement: Uses synchronous operations only.
+ * Silently skips paths that no longer exist (e.g., deleted directories).
+ *
+ * @param root - Root DirectoryNode to restore expansion state to
+ * @param expandedPaths - Set of paths that should be expanded
+ * @param showHidden - Whether to include hidden files/directories
+ * @returns New tree with expansion state restored
+ */
+export function restoreExpandedState(
+  root: DirectoryNode,
+  expandedPaths: Set<string>,
+  showHidden: boolean,
+): DirectoryNode {
+  // If this directory should be expanded, expand it
+  let updatedRoot = root;
+  if (expandedPaths.has(root.path)) {
+    updatedRoot = expandNode(root, showHidden);
+  }
+
+  // Recursively restore expansion state for children
+  const updatedChildren = updatedRoot.children.map((child) => {
+    if (child.type === "directory" && expandedPaths.has(child.path)) {
+      return restoreExpandedState(child, expandedPaths, showHidden);
+    }
+    return child;
+  });
+
+  return {
+    ...updatedRoot,
+    children: updatedChildren,
+  };
+}
