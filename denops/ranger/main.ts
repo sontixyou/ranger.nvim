@@ -154,7 +154,33 @@ export async function main(denops: Denops): Promise<void> {
         if (!node) return;
 
         if (node.type === "file") {
-          // Open file in Neovim
+          // Open file in right buffer (not in sidebar)
+          // First, try to use the previous window (the one active before opening sidebar)
+          let targetWinid = globalState.prevWinid;
+
+          // Check if prevWinid is still valid and not the sidebar itself
+          if (!targetWinid || !await isValidWin(denops, targetWinid) || targetWinid === globalState.winid) {
+            // Find a non-sidebar window to open the file in
+            const windows = await denops.call("nvim_list_wins") as number[];
+            for (const winid of windows) {
+              if (winid !== globalState.winid) {
+                targetWinid = winid;
+                break;
+              }
+            }
+
+            // If no other window exists, create one to the right of sidebar
+            if (!targetWinid || targetWinid === globalState.winid) {
+              // Move to sidebar window first
+              await denops.call("nvim_set_current_win", globalState.winid);
+              // Create a new window to the right
+              await denops.cmd("rightbelow vertical split");
+              targetWinid = await denops.call("nvim_get_current_win") as number;
+            }
+          }
+
+          // Switch to target window and open file
+          await denops.call("nvim_set_current_win", targetWinid);
           await denops.cmd(`edit ${node.path}`);
         } else {
           // Expand/collapse directory
