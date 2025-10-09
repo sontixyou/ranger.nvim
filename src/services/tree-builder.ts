@@ -43,7 +43,7 @@ export function buildTree(rootPath: string, showHidden: boolean): DirectoryNode 
     name,
     path: rootPath,
     hidden: name.startsWith("."),
-    expanded: false,
+    expanded: true, // Root node should always be expanded to show its children
     children: [],
     childCount: 0,
     mtime: stat.mtime || new Date(),
