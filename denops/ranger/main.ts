@@ -12,7 +12,9 @@ import type { TreeState } from "../../src/models/types.ts";
 import { updateState } from "../../src/models/tree-state.ts";
 import {
   buildTree,
+  collectExpandedPaths,
   getVisibleNodes,
+  restoreExpandedState,
   toggleNode,
   updateNodeInTree,
 } from "../../src/services/tree-builder.ts";
@@ -100,8 +102,22 @@ export async function main(denops: Denops): Promise<void> {
         // Set the buffer in the sidebar window
         await denops.call("nvim_set_current_buf", bufnr);
 
+        // Collect expanded paths from previous tree (if exists)
+        const expandedPaths = globalState?.rootNode
+          ? collectExpandedPaths(globalState.rootNode)
+          : new Set<string>();
+
         // Build tree from current directory
-        const rootNode = buildTree(cwd, globalState?.showHidden ?? false);
+        let rootNode = buildTree(cwd, globalState?.showHidden ?? false);
+
+        // Restore expansion state
+        if (expandedPaths.size > 0) {
+          rootNode = restoreExpandedState(
+            rootNode,
+            expandedPaths,
+            globalState?.showHidden ?? false,
+          );
+        }
 
         // Update global state
         globalState = {
@@ -472,8 +488,17 @@ export async function main(denops: Denops): Promise<void> {
         // Toggle showHidden flag
         const showHidden = !globalState.showHidden;
 
+        // Collect expanded paths before rebuilding
+        const expandedPaths = collectExpandedPaths(globalState.rootNode);
+
         // Refresh tree with new visibility
-        const rootNode = buildTree(globalState.rootPath, showHidden);
+        let rootNode = buildTree(globalState.rootPath, showHidden);
+
+        // Restore expansion state
+        if (expandedPaths.size > 0) {
+          rootNode = restoreExpandedState(rootNode, expandedPaths, showHidden);
+        }
+
         globalState = updateState(globalState, { showHidden, rootNode });
 
         // Re-render
@@ -570,8 +595,21 @@ export async function main(denops: Denops): Promise<void> {
       if (!globalState) return;
 
       try {
+        // Collect expanded paths before rebuilding
+        const expandedPaths = collectExpandedPaths(globalState.rootNode);
+
         // Rebuild tree from scratch
-        const rootNode = buildTree(globalState.rootPath, globalState.showHidden);
+        let rootNode = buildTree(globalState.rootPath, globalState.showHidden);
+
+        // Restore expansion state
+        if (expandedPaths.size > 0) {
+          rootNode = restoreExpandedState(
+            rootNode,
+            expandedPaths,
+            globalState.showHidden,
+          );
+        }
+
         globalState = { ...globalState, rootNode };
 
         // Re-render
